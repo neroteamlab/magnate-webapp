@@ -10,6 +10,12 @@ const mockedGames = [
     image: "/images/sea_battle.jpg",
     href: "/games/occupation",
   },
+  {
+    id: 2,
+    title: "Рыбалка",
+    image: "/images/sea_battle.jpg",
+    href: "/games/fishing",
+  },
 ];
 
 const GamesPage: React.FC = () => {

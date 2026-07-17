@@ -21,3 +21,200 @@
 button {
   cursor: pointer;
 }
+
+.modal-box {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: flex;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.modal-box.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-box__content {
+  padding: 20px;
+  border-radius: 12px;
+  background-color: white;
+  height: 200px;
+  width: 400px;
+  transform: scale(0.5);
+  transition: 0.4s all;
+}
+
+.modal-box__content.active {
+  transform: scale(1);
+}
+
+.fish-card {
+  display: grid;
+  padding: 16px;
+  text-align: center;
+  justify-content: center;
+}
+
+.fish-img {
+  justify-self: center;
+}
+
+.fish-catching-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.fish-catching-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fish-catching-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.929);
+}
+
+.fish-catching-ui {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.fish-catching-ui h2 {
+  color: white;
+  font-size: 24px;
+  margin: 0 0 12px 0;
+  font-family: monospace;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.catch-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  transition: width 0.2s ease;
+}
+
+.progress-text {
+  color: white;
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: bold;
+  min-width: 60px;
+  text-align: right;
+}
+
+.fish-silhouette {
+  position: absolute;
+  width: 230px;
+  height: 190px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: left 0.3s ease, top 0.3s ease;
+  animation: fishFloat 2s ease-in-out infinite;
+  z-index: 5;
+}
+
+.fish-silhouette:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.fish-silhouette:active {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.fish-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(100, 200, 200, 0.3));
+}
+
+.fish-body {
+  fill: #000;
+}
+
+.fish-eye-outer {
+  fill: #fff;
+}
+
+.fish-eye-inner {
+  fill: #000;
+}
+
+@keyframes fishFloat {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(-5deg);
+  }
+
+  50% {
+    transform: translate(-50%, -55%) rotate(5deg);
+  }
+}
+
+.click-effect {
+  position: fixed;
+  color: #4ade80;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: monospace;
+  pointer-events: none;
+  z-index: 20;
+  animation: clickFloat 0.6s ease-out forwards;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes clickFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+.catch-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: monospace;
+  font-size: 16px;
+  text-align: center;
+}

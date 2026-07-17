@@ -8,6 +8,7 @@ import GamesPage from "./pages/GamesPage";
 import ProfilePage from "./pages/ProfilePage";
 import OccupationPage from "./pages/games/OccupationPage";
 import { useHashAdapter } from "./utils/hooks/hashPathAdapter";
+import FishingPage from "./pages/games/FishingPage";
 
 const App: React.FC = () => {
   const [isAuth, setIsAuth] = React.useState<boolean>(false);
@@ -42,20 +43,21 @@ const App: React.FC = () => {
     );
   }
 
-  if (!isAuth && !pending) return <AuthorizationPage />;
+  //if (!isAuth && !pending) return <AuthorizationPage />;
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
-      <div className="w-full">
-        <div className="p-3 pb-20">
-          <Routes>
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/games" element={<GamesPage />} />
-            <Route path="/games/occupation/:id" element={<OccupationPage />} />
-            <Route path="/games/occupation" element={<OccupationPage />} />
-            {/* <Route path="*" element={<Navigate to="/games" />} /> */}
-          </Routes>
-        </div>
+    <div className="h-screen w-screen flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 relative overflow-hidden">
+        <Routes>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/games" element={<GamesPage />} />
+          <Route path="/games/occupation/:id" element={<OccupationPage />} />
+          <Route path="/games/occupation" element={<OccupationPage />} />
+          <Route path="/games/fishing" element={<FishingPage />} />
+          {/* <Route path="*" element={<Navigate to="/games" />} /> */}
+        </Routes>
+      </div>
+      <div className="flex-shrink-0">
         <SideBar />
       </div>
     </div>
