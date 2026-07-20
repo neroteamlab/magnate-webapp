@@ -13,7 +13,7 @@ const mockedGames = [
   {
     id: 2,
     title: "Рыбалка",
-    image: "/images/sea_battle.jpg",
+    image: "/images/fishing.jpg",
     href: "/games/fishing",
   },
 ];
@@ -23,7 +23,7 @@ const GamesPage: React.FC = () => {
     <div className="space-y-3">
       <Input startContent={<SearchIcon />} placeholder="Поиск" />
 
-      <div className="flex flex-wrap h-full">
+      <div className="flex flex-wrap h-full gap-5">
         {mockedGames.map((game) => (
           <Game
             key={game.id}

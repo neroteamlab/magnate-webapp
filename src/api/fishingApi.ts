@@ -6,7 +6,16 @@ export interface SuccessResponse {
 }
 
 export const startFishing = async (): Promise<FishingState> => {
-  const { data } = await baseApi.post(`/game/fishing/start/`);
+  // mock
+
+  const data = {
+    id: 1,
+    clicksCount: 8,
+    seed: 120012,
+    castTime: new Date(Date.now() + 3_000), // rand
+    finishTime: new Date(Date.now() + 30_000)
+  };
+  //const { data } = await baseApi.post(`/game/fishing/start/`);
 
   return data;
 };

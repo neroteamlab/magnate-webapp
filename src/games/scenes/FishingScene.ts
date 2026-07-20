@@ -1,8 +1,6 @@
 import { Scene, GameObjects, Tilemaps, Tweens, Time, Input, Math as PhaserMath, Display } from 'phaser';
 import { useGameStore } from '../../store/gameStore';
-// import { toast } from 'react-toastify';
 
-// Глобальный интерфейс для звуков
 declare global {
     interface Window {
         gameSounds: {
@@ -16,7 +14,6 @@ declare global {
     }
 }
 
-// --- Интерфейсы для типизации смещений удочки ---
 interface RodOffset {
     x: number;
     y: number;
@@ -40,7 +37,6 @@ interface RodDirectionOffsets {
     right: RodStateOffsets;
 }
 
-// Типы для состояния рыбалки
 type FishingState = 'IDLE' | 'CASTING' | 'WAITING' | 'BITE' | 'REELING' | 'CAUGHT' | 'LOST';
 type Direction = 'up' | 'down' | 'left' | 'right';
 
@@ -64,7 +60,6 @@ export class FishingScene extends Scene {
 
     private rodTipOffsets: RodDirectionOffsets;
 
-    // Объекты, создаваемые в create(), но используемые в других методах
     private groundLayer: Tilemaps.TilemapLayer | null = null;
     private boatContainer: GameObjects.Container | null = null;
     private boat: GameObjects.Sprite | null = null;
@@ -74,12 +69,10 @@ export class FishingScene extends Scene {
     private line: GameObjects.Graphics | null = null;
     private debugRodTip: GameObjects.Rectangle | null = null;
 
-    // Таймеры и твины
     private shadowSpawnTimer: Time.TimerEvent | null = null;
     private timeCycleEvent: Time.TimerEvent | null = null;
     private boatBobTween: Tweens.Tween | null = null;
 
-    // Состояние анимации (используется в callback и debug)
     private currentAnimKey: string = '';
     private currentFrameIndex: number = 0;
     private debugAnimName: string = 'idle';
@@ -270,7 +263,6 @@ export class FishingScene extends Scene {
         });
     }
 
-    // === ИСПРАВЛЕННЫЙ МЕТОД ===
     updateDayNightCycle(): void {
         type ColorRGB = { r: number; g: number; b: number };
 
@@ -530,6 +522,7 @@ export class FishingScene extends Scene {
         this.fishingState = 'CASTING';
         this.playFisherAnimation('cast');
         if (window.gameSounds?.cast) window.gameSounds.cast.play();
+        useGameStore.getState().castFishingRod();
 
         if (this.bobber) {
             this.bobber.setVisible(true);
@@ -575,7 +568,9 @@ export class FishingScene extends Scene {
     }
 
     scheduleBite(): void {
-        const delay = PhaserMath.Between(2000, 4000);
+        const castTime = useGameStore.getState().fishingState?.castTime;
+        if (!castTime) return this.reset();
+        const delay = castTime.getTime() - new Date().getTime();
         this.biteTimer = this.time.delayedCall(delay, () => this.onBite());
     }
 
@@ -600,7 +595,7 @@ export class FishingScene extends Scene {
 
         this.notifyUI('КЛЮЁТ! Жми!');
 
-        this.biteWindowTimer = this.time.delayedCall(1500, () => {
+        this.biteWindowTimer = this.time.delayedCall(2000, () => {
             if (this.fishingState === 'BITE') {
                 this.fishingState = 'LOST';
                 this.notifyUI('Рыба ушла...');

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Math as PhaserMath, Utils } from 'phaser';
+import { startFishing } from '../api/fishingApi';
 
-// Убедимся, что TypeScript знает о window.gameSounds (как в предыдущих файлах)
 declare global {
   interface Window {
     gameSounds: {
@@ -15,8 +15,6 @@ declare global {
   }
 }
 
-// --- Интерфейсы данных ---
-
 interface FishTemplate<TWeight = [number, number]> {
   name: string;
   weight: TWeight;
@@ -26,21 +24,29 @@ interface FishTemplate<TWeight = [number, number]> {
 
 type CaughtFish = FishTemplate<string>;
 
-// --- Интерфейс состояния Zustand ---
 
 interface GameState {
-  // Состояние модального окна с пойманной рыбой
   showFish: boolean;
   fish: CaughtFish | null;
   showFishModal: () => void;
   closeFish: () => void;
 
   // Состояние мини-игры по поимке
+
   showFishCatching: boolean;
   catchClicks: number;
   catchTarget: number;
   fishPosition: { x: number; y: number };
-  interval: ReturnType<typeof setInterval> | null; // Универсальный тип для setInterval
+  interval: ReturnType<typeof setInterval> | null;
+
+  // api 
+  castFishingRod: () => void;
+  fishingState: {
+    id: number;
+    seed: number;
+    finishTime: Date;
+    castTime: Date
+  } | null;
 
   // Действия мини-игры
   startFishCatching: () => void;
@@ -48,24 +54,33 @@ interface GameState {
   finishFishCatching: () => void;
 }
 
-// --- Данные ---
 
 const fishList: FishTemplate[] = [
   { name: 'Щука', weight: [1, 3.5], value: 60, img: '/assets/fish/pike.png' },
-  // Сюда можно добавлять других рыб
+
 ];
 
-// --- Стор ---
-
 export const useGameStore = create<GameState>((set, get) => ({
-  // === Модалка с рыбой ===
+  fishingState: null,
   showFish: false,
   fish: null,
 
+  castFishingRod: async () => {
+    const data = await startFishing();
+    set({
+      fishingState: {
+        id: data.id,
+        seed: data.seed,
+        finishTime: data.finishTime,
+        castTime: data.castTime
+      },
+      catchTarget: data.clicksCount
+    });
+  },
+
   showFishModal: () => {
     const randomFish = Utils.Array.GetRandom(fishList);
-    
-    // Явно передаем элементы кортежа, чтобы TS не ругался на spread operator
+
     const minWeight = randomFish.weight[0];
     const maxWeight = randomFish.weight[1];
 
@@ -80,19 +95,17 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   closeFish: () => {
     const state = get();
-    
-    // Безопасность: очищаем интервал, если модалку закрыли вручную во время мини-игры
+
     if (state.interval) {
       clearInterval(state.interval);
     }
 
-    set({ 
+    set({
       showFish: false,
-      interval: null 
+      interval: null
     });
   },
 
-  // === Мини-игра по поимке ===
   showFishCatching: false,
   catchClicks: 0,
   catchTarget: 8,
@@ -101,13 +114,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   startFishCatching: () => {
     const currentState = get();
-    
-    // Безопасность: очищаем предыдущий интервал, если он вдруг остался
+
     if (currentState.interval) {
       clearInterval(currentState.interval);
     }
 
-    // Создаем интервал отдельно, чтобы передать его в set
     const newInterval = setInterval(() => {
       set({
         fishPosition: {
@@ -147,16 +158,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   finishFishCatching: () => {
     const state = get();
-    
+
     if (state.interval) {
       clearInterval(state.interval);
     }
 
-    set({ 
+    set({
       showFishCatching: false,
-      interval: null 
+      interval: null
     });
-    
+
     get().showFishModal();
   }
 }));
