@@ -42,6 +42,7 @@ export const useFetchBattleData = (id?: string) => {
         setBattleData(data);
         setStep(data.step);
       } catch (e) {
+        console.error(e);
         setIsError(true);
       } finally {
         setLoading(false);
@@ -50,6 +51,10 @@ export const useFetchBattleData = (id?: string) => {
 
     fetchBattleData();
   }, [id, step]);
+  
+  const moveNextStep = React.useCallback(() => {
+    setStep((prev) => (prev < 4 ? prev + 1 : prev));
+  }, []);
 
   React.useEffect(() => {
     if (remaining && remaining < -1000 && !moveNextStepCalled) {
@@ -57,12 +62,9 @@ export const useFetchBattleData = (id?: string) => {
 
       moveNextStep();
     }
-  }, [remaining, moveNextStepCalled]);
+  }, [remaining, moveNextStepCalled, moveNextStep]);
 
-  const moveNextStep = React.useCallback(() => {
-    setStep((prev) => (prev < 4 ? prev + 1 : prev));
-  }, []);
-
+  
   return {
     battleData,
     setBattleData,

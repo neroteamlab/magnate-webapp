@@ -1,6 +1,6 @@
 import type React from "react";
 import { cn } from "../../utils/classNames";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 interface IProps {
   title: string;
