@@ -1,6 +1,6 @@
 import { Button } from "@heroui/react";
 import type React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const AuthorizationPage: React.FC = () => {
   return (

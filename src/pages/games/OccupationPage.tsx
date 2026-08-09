@@ -1,6 +1,6 @@
 import { Avatar, Button } from "@heroui/react";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { appleTargetLocation } from "../../api/gameApi";
 import { AimIcon } from "../../assets/AimIcon";
 import { BoomIcon } from "../../assets/BoomIcon";
@@ -42,6 +42,16 @@ const getIconByStep = (
   locations?: Position[],
   aims?: Aim[]
 ) => {
+  const companyLocation = locations?.find(
+    (location) => location.x === x && location.y === y
+  );
+  const targetCompanyLocation = targetLocations?.find(
+    (location) => location.x === x && location.y === y
+  );
+  const companyAim = aims?.find((aim) => aim.x === x && aim.y === y);
+  const targetCompanyAim = targetAims?.find(
+    (aim) => aim.x === x && aim.y === y
+  );
   switch (step) {
     case 1:
       return <PositionIcon color="#17C964" />;
@@ -49,18 +59,6 @@ const getIconByStep = (
       return <AimIcon />;
     case 3:
     case 4:
-      const companyLocation = locations?.find(
-        (location) => location.x === x && location.y === y
-      );
-      const targetCompanyLocation = targetLocations?.find(
-        (location) => location.x === x && location.y === y
-      );
-
-      const companyAim = aims?.find((aim) => aim.x === x && aim.y === y);
-      const targetCompanyAim = targetAims?.find(
-        (aim) => aim.x === x && aim.y === y
-      );
-
       if (companyAim?.isTarget || targetCompanyAim?.isTarget)
         return <BoomIcon />;
 
@@ -93,9 +91,9 @@ const getIconByStep = (
         return <PositionIcon color="#17C964" />;
       }
 
-      return;
+      break;
     default:
-      return;
+      break;
   }
 };
 
@@ -158,7 +156,7 @@ const OccupationPage: React.FC = () => {
       moveNextStep();
       setSelectedPosition(null);
     }
-  }, [step, selectedPosition?.x, selectedPosition?.y]);
+  }, [selectedPosition, moveNextStep]);
 
   if (loading) return <Loading />;
 

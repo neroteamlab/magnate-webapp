@@ -8,7 +8,7 @@ declare global {
         close: () => void;
         expand: () => void;
         initData: string;
-        initDataUnsafe: any;
+        initDataUnsafe: unknown;
         platform: string;
         colorScheme: "light" | "dark";
         sendData: (data: string) => void;

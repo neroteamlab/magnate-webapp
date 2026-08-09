@@ -1,7 +1,7 @@
 import { Button, Spinner } from "@heroui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import {
   fetchGiveawayStatus,
   joinGiveaway,

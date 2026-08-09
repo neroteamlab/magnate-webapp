@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { HomeIcon } from "../../assets/HomeIcon";
 import { ProfileIcon } from "../../assets/ProfileIcon";
 import { cn } from "../../utils/classNames";
