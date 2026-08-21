@@ -9,7 +9,7 @@ COPY . .
 
 RUN --mount=type=secret,id=env \
     cp /run/secrets/env .env.production && \
-    npm run build
+    npm run build 
 
 FROM nginx:1.27-alpine
 
