@@ -38,6 +38,14 @@ jobs:
           run: |
             printf '%s' "${{ secrets.VITE_ENV }}" > .env.production
 
+        - name: Check env
+          run: |
+            echo "Lines:"
+            wc -l .env.production
+
+            echo "Keys:"
+            cut -d= -f1 .env.production
+
         - name: Build and Push Docker Image
           if: github.event_name == 'push'
           uses: docker/build-push-action@v6
