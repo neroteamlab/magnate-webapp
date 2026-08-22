@@ -11,8 +11,12 @@ COPY . .
 
 RUN --mount=type=secret,id=env \
     cp /run/secrets/env .env.production && \
-    echo "ENV KEYS:" && \
-    cut -d= -f1 .env.production && \
+    echo "LINES:" && \
+    wc -l .env.production && \
+    echo "BYTES:" && \
+    wc -c .env.production && \
+    echo "KEYS:" && \
+    sed 's/=.*//' .env.production && \
     npm run build
     
 FROM nginx:1.27-alpine
