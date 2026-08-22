@@ -11,8 +11,10 @@ COPY . .
 
 RUN --mount=type=secret,id=env \
     cp /run/secrets/env .env.production && \
-    npm run build 
-
+    echo "ENV FILE:" && \
+    cat .env.production && \
+    npm run build
+    
 FROM nginx:1.27-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
